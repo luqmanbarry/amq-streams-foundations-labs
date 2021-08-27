@@ -8,7 +8,12 @@ spec:
   kafka:
     replicas: 3
     listeners:
-      plain: {}
+      # plain: {}
+      tls:
+        authentication:
+          type: tls
+    authorization:
+      type: simple
     configuration:
       auto.create.topics.enable: false
     storage:

@@ -25,8 +25,8 @@ spec:
       - name: hello-world-producer
         image: strimzici/hello-world-producer:support-training
         env:
-          - name: BOOTSTRAP_SERVERS
-            value: my-cluster-kafka-bootstrap:9092
+          # - name: BOOTSTRAP_SERVERS
+          #   value: my-cluster-kafka-bootstrap:9092
           - name: TOPIC
             value: my-topic
           - name: DELAY_MS
@@ -35,6 +35,13 @@ spec:
             value: "INFO"
           - name: MESSAGE_COUNT
             value: "1000"
+          - name: CA_CRT
+            valueFrom:
+              secretKeyRef:
+                name: my-cluster-cluster-ca-cert
+                key: ca.crt
+          - name: BOOTSTRAP_SERVERS
+            value: my-cluster-kafka-bootstrap:9093
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -53,8 +60,8 @@ spec:
       - name: hello-world-consumer
         image: strimzici/hello-world-consumer:support-training
         env:
-          - name: BOOTSTRAP_SERVERS
-            value: my-cluster-kafka-bootstrap:9092
+          # - name: BOOTSTRAP_SERVERS
+          #   value: my-cluster-kafka-bootstrap:9092
           - name: TOPIC
             value: my-topic
           - name: GROUP_ID
@@ -63,3 +70,10 @@ spec:
             value: "INFO"
           - name: MESSAGE_COUNT
             value: "1000"
+          - name: CA_CRT
+            valueFrom:
+              secretKeyRef:
+                name: my-cluster-cluster-ca-cert
+                key: ca.crt
+          - name: BOOTSTRAP_SERVERS
+            value: my-cluster-kafka-bootstrap:9093

@@ -1,0 +1,9 @@
+{
+  "name": "source-test",
+  "config": {
+    "connector.class": "FileStreamSource",
+    "tasks.max": "3",
+    "topic": "my-topic-2",
+    "file": "/tmp/uber.csv"
+  }
+}
