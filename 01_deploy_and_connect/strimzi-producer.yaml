@@ -1,4 +1,4 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
@@ -6,6 +6,9 @@ metadata:
   name: kafka-producer
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-producer
   template:
     metadata:
       labels:
@@ -16,11 +19,13 @@ spec:
         image: strimzi/hello-world-producer:latest
         resources:
           limits:
-            cpu: "2"
+            cpu: "500m"
             memory: 2Gi
           requests:
-            cpu: "1"
-            memory: 1Gi
+            cpu: "200m"
+            memory: 512Mi
+        nodeSelector:
+          type: worker
         env:
           - name: BOOTSTRAP_SERVERS
             value: my-cluster-kafka-bootstrap:9092

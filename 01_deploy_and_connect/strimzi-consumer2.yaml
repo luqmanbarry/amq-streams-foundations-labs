@@ -2,20 +2,20 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: kafka-consumer
-  name: kafka-consumer
+    app: kafka-consumer-2
+  name: kafka-consumer-2
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka-consumer
+      app: kafka-consumer-2
   template:
     metadata:
       labels:
-        app: kafka-consumer
+        app: kafka-consumer-2
     spec:
       containers:
-      - name: kafka-consumer
+      - name: kafka-consumer-2
         image: strimzi/hello-world-consumer:latest
         resources:
           limits:
@@ -23,7 +23,7 @@ spec:
             memory: 2Gi
           requests:
             cpu: "100m"
-            memory: 1Gi
+            memory: 512Mi
         env:
           - name: BOOTSTRAP_SERVERS
             value: my-cluster-kafka-bootstrap:9092

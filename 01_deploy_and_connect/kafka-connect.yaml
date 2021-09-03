@@ -1,4 +1,4 @@
-apiVersion: kafka.strimzi.io/v1alpha1
+apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnect
 metadata:
   name: my-connect
@@ -6,11 +6,11 @@ spec:
   replicas: 1
   resources:
     requests:
-      memory: 512Mi
-      cpu: 200m
+      memory: 256Mi
+      cpu: 100m
     limits:
-      memory: 2Gi
-      cpu: 500m
+      memory: 1Gi
+      cpu: 200m
   readinessProbe:
     initialDelaySeconds: 120
     timeoutSeconds: 5
