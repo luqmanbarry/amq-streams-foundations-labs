@@ -11,6 +11,8 @@ spec:
       tls:
         authentication:
           type: tls
+    auhorization:
+      type: simple
       # plain: {}
     configuration:
       auto.create.topics.enable: false
