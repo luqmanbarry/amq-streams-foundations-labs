@@ -48,7 +48,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prometheus-server
-  namespace: _my-namespace_
+  namespace: kafkaproject
 
 ---
 apiVersion: extensions/v1beta1
