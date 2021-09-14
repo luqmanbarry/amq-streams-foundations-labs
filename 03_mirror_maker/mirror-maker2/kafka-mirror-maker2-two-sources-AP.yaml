@@ -8,8 +8,8 @@ spec:
   clusters:
   - alias: "my-source-cluster-1"
     bootstrapServers: my-source-cluster-1-kafka-bootstrap:9092
-  - alias: "my-source-cluster-2"
-    bootstrapServers: my-source-cluster-2-kafka-bootstrap:9092
+  # - alias: "my-source-cluster-2"
+  #   bootstrapServers: my-source-cluster-2-kafka-bootstrap:9092
   - alias: "my-target-cluster"
     bootstrapServers: my-target-cluster-kafka-bootstrap:9092
     config:
@@ -42,37 +42,37 @@ spec:
         emit.checkpoints.interval.seconds: 1
     topicsPattern: ".*"
     groupsPattern: ".*"
-  - sourceCluster: "my-source-cluster-2"
-    targetCluster: "my-target-cluster"
-    sourceConnector:
-      config:
-        replication.factor: 3
-        offset-syncs.topic.replication.factor: 1
-        sync.topic.configs.enabled: "false"
-        sync.topic.acls.enabled: "false"
-        refresh.topics.interval.seconds: 60
-        replication.policy.separator: ""
-        replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
-    heartbeatConnector:
-      config:
-        heartbeats.topic.replication.factor: 3
-    checkpointConnector:
-      config:
-        checkpoints.topic.replication.factor: 3
-        refresh.groups.interval.seconds: 60
-        replication.policy.separator: ""
-        replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
-        sync.group.offsets.enabled: "true"
-        sync.group.offsets.interval.seconds: 1
-        emit.checkpoints.interval.seconds: 1
-    topicsPattern: ".*"
-    groupsPattern: ".*"
+  # - sourceCluster: "my-source-cluster-2"
+  #   targetCluster: "my-target-cluster"
+  #   sourceConnector:
+  #     config:
+  #       replication.factor: 3
+  #       offset-syncs.topic.replication.factor: 1
+  #       sync.topic.configs.enabled: "false"
+  #       sync.topic.acls.enabled: "false"
+  #       refresh.topics.interval.seconds: 60
+  #       replication.policy.separator: ""
+  #       replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
+  #   heartbeatConnector:
+  #     config:
+  #       heartbeats.topic.replication.factor: 3
+  #   checkpointConnector:
+  #     config:
+  #       checkpoints.topic.replication.factor: 3
+  #       refresh.groups.interval.seconds: 60
+  #       replication.policy.separator: ""
+  #       replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
+  #       sync.group.offsets.enabled: "true"
+  #       sync.group.offsets.interval.seconds: 1
+  #       emit.checkpoints.interval.seconds: 1
+  #   topicsPattern: ".*"
+  #   groupsPattern: ".*"
   resources:
     requests:
-      cpu: 150m
+      cpu: 50m
       memory: 400Mi
     limits:
-      cpu: 150m
+      cpu: 100m
       memory: 400Mi
   metricsConfig:
     type: jmxPrometheusExporter
@@ -84,12 +84,19 @@ spec:
     type: inline
     loggers:
       connect.root.logger.level: "WARN"
+      log4j.logger.io.strimzi.mirrormaker.agent: TRACE
+      mirrormaker.root.logger: INFO
   readinessProbe:
     initialDelaySeconds: 15
     timeoutSeconds: 5
   livenessProbe:
     initialDelaySeconds: 15
     timeoutSeconds: 5
-  jvmOptions:
-    "-Xmx": "200M"
-    "-Xms": "200M"
+  # jvmOptions:
+  #   "-Xmx": "200M"
+  #   "-Xms": "200M"
+  tolerations:
+  - key: "node-role.kubernetes.io"
+    value: "master"
+    operator: "Equal"
+    effect: "NoSchedule"

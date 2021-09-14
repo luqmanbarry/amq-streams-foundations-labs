@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: my-target-cluster
+  name: my-source-cluster-2
 spec:
   kafka:
     # version: 2.7.0
@@ -28,13 +28,11 @@ spec:
       limits:
         memory: 512Mi
         cpu: 300m
-    template:
-      pod:
-        tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
+    tolerations:
+    - key: "node-role.kubernetes.io"
+      value: "master"
+      operator: "Equal"
+      effect: "NoSchedule"
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
@@ -52,13 +50,11 @@ spec:
       limits:
         memory: 512Mi
         cpu: 300m
-    template:
-      pod:
-        tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
+    tolerations:
+    - key: "node-role.kubernetes.io"
+      value: "master"
+      operator: "Equal"
+      effect: "NoSchedule"
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
