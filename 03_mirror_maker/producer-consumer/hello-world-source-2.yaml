@@ -33,11 +33,11 @@ spec:
           - name: TOPIC
             value: my-source-cluster-2-topic
           - name: DELAY_MS
-            value: "1500"
+            value: "500"
           - name: LOG_LEVEL
             value: "INFO"
           - name: MESSAGE_COUNT
-            value: "5000"
+            value: "10000"
         resources:
           requests:
             memory: 128Mi
@@ -75,7 +75,7 @@ spec:
           - name: LOG_LEVEL
             value: "INFO"
           - name: MESSAGE_COUNT
-            value: "5000"
+            value: "10000"
         resources:
           requests:
             memory: 128Mi

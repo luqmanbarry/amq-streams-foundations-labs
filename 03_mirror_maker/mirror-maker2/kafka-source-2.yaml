@@ -1,7 +1,7 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: Kafka
 metadata:
-  name: my-target-cluster
+  name: my-source-cluster-2
 spec:
   kafka:
     # version: 2.7.0
@@ -46,13 +46,13 @@ spec:
           memory: 128Mi
           cpu: 50m
         limits:
-          memory: 200Mi
-          cpu: 80m
+          memory: 256Mi
+          cpu: 100m
   userOperator:
     resources:
       requests:
         memory: 128Mi
         cpu: 50m
       limits:
-        memory: 200Mi
-        cpu: 80m
+        memory: 256Mi
+        cpu: 100m
