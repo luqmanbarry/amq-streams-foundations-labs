@@ -4,26 +4,25 @@ metadata:
   name: my-mirror-maker-2
 spec:
   version: 2.7.0
+  replicas: 2
   connectCluster: "my-target-cluster"
   clusters:
   - alias: "my-source-cluster-1"
     bootstrapServers: my-source-cluster-1-kafka-bootstrap:9092
-  # - alias: "my-source-cluster-2"
-  #   bootstrapServers: my-source-cluster-2-kafka-bootstrap:9092
   - alias: "my-target-cluster"
     bootstrapServers: my-target-cluster-kafka-bootstrap:9092
     config:
-      config.storage.replication.factor: 3
-      offset.storage.replication.factor: 3
-      status.storage.replication.factor: 3
+      config.storage.replication.factor: 1
+      offset.storage.replication.factor: 1
+      status.storage.replication.factor: 1
   mirrors:
   - sourceCluster: "my-source-cluster-1"
     targetCluster: "my-target-cluster"
     sourceConnector:
       config:
         replication.factor: 3
-        offset-syncs.topic.replication.factor: 1
-        sync.topic.configs.enabled: "false"
+        offset-syncs.topic.replication.factor: 3
+        sync.topic.configs.enabled: "true"
         sync.topic.acls.enabled: "false"
         refresh.topics.interval.seconds: 60
         replication.policy.separator: ""
@@ -69,11 +68,11 @@ spec:
   #   groupsPattern: ".*"
   resources:
     requests:
-      cpu: 50m
-      memory: 400Mi
+      cpu: 200m
+      memory: 600Mi
     limits:
-      cpu: 100m
-      memory: 400Mi
+      cpu: 400m
+      memory: 600Mi
   metricsConfig:
     type: jmxPrometheusExporter
     valueFrom:
@@ -86,17 +85,19 @@ spec:
       connect.root.logger.level: "WARN"
       log4j.logger.io.strimzi.mirrormaker.agent: TRACE
       mirrormaker.root.logger: INFO
-  readinessProbe:
-    initialDelaySeconds: 15
-    timeoutSeconds: 5
-  livenessProbe:
-    initialDelaySeconds: 15
-    timeoutSeconds: 5
-  # jvmOptions:
-  #   "-Xmx": "200M"
-  #   "-Xms": "200M"
+  #readinessProbe:
+  #  initialDelaySeconds: 15
+  #  timeoutSeconds: 5
+  #livenessProbe:
+  #  initialDelaySeconds: 15
+  #  timeoutSeconds: 5
+  jvmOptions:
+    "-Xmx": "200M"
+    "-Xms": "200M"
   tolerations:
   - key: "node-role.kubernetes.io"
     value: "master"
     operator: "Equal"
     effect: "NoSchedule"
+  - key: ""
+    operator: "Exists"
