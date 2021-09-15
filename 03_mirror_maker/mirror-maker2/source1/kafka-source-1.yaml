@@ -35,6 +35,8 @@ spec:
           value: "master"
           operator: "Equal"
           effect: "NoSchedule"
+        - key: ""
+          operator: "Exists"
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
@@ -65,6 +67,8 @@ spec:
           value: "master"
           operator: "Equal"
           effect: "NoSchedule"
+        - key: ""
+          operator: "Exists"
     readinessProbe:
       initialDelaySeconds: 15
       timeoutSeconds: 5
