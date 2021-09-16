@@ -28,8 +28,8 @@
         ```
 			
 7. Mount the two config maps into grafana Deployment manifest -- 3 different mount paths using volumeMounts: and volumes:
-    * /etc/grafana/provisioning/datasource.yaml for datasource provider config
-    * /etc/grafana/dashboards/dashboard.yaml for dashboard provider config
+    * /etc/grafana/provisioning/datasource.yaml for datasource provider config -- [Click for more](https://grafana.com/docs/grafana/latest/administration/provisioning/)
+    * /etc/grafana/dashboards/dashboard.yaml for dashboard provider config -- [Click for more](https://grafana.com/docs/grafana/latest/administration/provisioning/)
     * /etc/grafana/dashboards/kafka for dashboards json contents
 			
 8. Lastly oc apply the grafana Deployment manifest
