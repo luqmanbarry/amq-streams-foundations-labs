@@ -27,10 +27,19 @@ spec:
           mountPath: /var/lib/grafana
         - name: grafana-logs
           mountPath: /var/log/grafana
+        # GRAFANA DATA-SOURCE AND DASHBOARD CONFIG
         - name: grafana-config
           mountPath: /etc/grafana/provisioning/datasources/datasource.yaml
           readOnly: true
           subPath: datasource.yaml
+        - name: grafana-config
+          mountPath: /etc/grafana/provisioning/dashboards/dashboard.yaml
+          readOnly: true
+          subPath: dashboard.yaml
+        - name: kafka-dashboards
+          mountPath: /etc/grafana/dashboards/kafka
+          readOnly: true
+          # subPath: kafka-dashboards
         readinessProbe:
           httpGet:
             path: /api/health
@@ -51,6 +60,9 @@ spec:
       - name: grafana-config
         configMap:
           name: grafana-config
+      - name: kafka-dashboards
+        configMap:
+          name: kafka-dashboards
 ---
 apiVersion: v1
 kind: Service
