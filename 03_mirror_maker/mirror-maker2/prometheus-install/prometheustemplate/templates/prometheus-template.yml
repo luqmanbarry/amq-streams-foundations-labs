@@ -1,9 +1,0 @@
-apiVersion: monitoring.coreos.com/v1
-kind: PrometheusRule
-metadata:
-  labels:
-    role: alert-rules
-    app: strimzi
-  name: {{.Values.name}}
-spec:
-  {{- toYaml .Values.prometheusRules | nindent 2 }}
