@@ -20,7 +20,7 @@ spec:
     targetCluster: "my-target-cluster"
     sourceConnector:
       config:
-        replication.factor: 3
+        replication.factor: 2
         offset-syncs.topic.replication.factor: 3
         sync.topic.configs.enabled: "true"
         sync.topic.acls.enabled: "false"
@@ -29,10 +29,10 @@ spec:
         replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
     heartbeatConnector:
       config:
-        heartbeats.topic.replication.factor: 3
+        heartbeats.topic.replication.factor: 2
     checkpointConnector:
       config:
-        checkpoints.topic.replication.factor: 3
+        checkpoints.topic.replication.factor: 2
         refresh.groups.interval.seconds: 60
         replication.policy.separator: ""
         replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
@@ -68,7 +68,7 @@ spec:
   #   groupsPattern: ".*"
   resources:
     requests:
-      cpu: 200m
+      cpu: 400m
       memory: 600Mi
     limits:
       cpu: 400m
@@ -95,9 +95,5 @@ spec:
     "-Xmx": "200M"
     "-Xms": "200M"
   tolerations:
-  - key: "node-role.kubernetes.io"
-    value: "master"
-    operator: "Equal"
-    effect: "NoSchedule"
   - key: ""
     operator: "Exists"

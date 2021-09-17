@@ -5,36 +5,28 @@ metadata:
 spec:
   kafka:
     # version: 2.7.0
-    replicas: 3
+    replicas: 2
     listeners:
       - name: plain
         port: 9092
         type: internal
         tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
     config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
+      offsets.topic.replication.factor: 2
+      transaction.state.log.replication.factor: 2
+      transaction.state.log.min.isr: 1
     storage:
       type: ephemeral
     resources:
       requests:
         memory: 512Mi
-        cpu: 200m
+        cpu: 300m
       limits:
         memory: 1024Mi
         cpu: 500m
     template:
       pod:
         tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
         - key: ""
           operator: "Exists"
     readinessProbe:
@@ -50,23 +42,19 @@ spec:
           name: kafka-metrics
           key: kafka-metrics-config.yml
   zookeeper:
-    replicas: 3
+    replicas: 2
     storage:
       type: ephemeral
     resources:
       requests:
-        memory: 512Mi
-        cpu: 200m
+        memory: 256Mi
+        cpu: 250m
       limits:
-        memory: 1024Mi
-        cpu: 500m
+        memory: 512Mi
+        cpu: 400m
     template:
       pod:
         tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
         - key: ""
           operator: "Exists"
     readinessProbe:
@@ -84,7 +72,31 @@ spec:
   kafkaExporter:
     groupRegex: ".*"
     topicRegex: ".*" 
+    resources:
+      requests:
+        cpu: 600m
+        memory: 128Mi
+      limits:
+        cpu: 700m
+        memory: 256Mi
+    template:
+      pod:
+        tolerations:
+        - key: ""
+          operator: "Exists"
   cruiseControl:
+    resources:
+      requests:
+        cpu: 400m
+        memory: 400Mi
+      limits:
+        cpu: 600m
+        memory: 512Mi
+    template:
+      pod:
+        tolerations:
+        - key: ""
+          operator: "Exists"
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
@@ -95,16 +107,16 @@ spec:
     topicOperator:
       resources:
         requests:
-          memory: 128Mi
-          cpu: 50m
+          memory: 256Mi
+          cpu: 200m
         limits:
-          memory: 200Mi
-          cpu: 100m
+          memory: 512Mi
+          cpu: 300m
     userOperator:
       resources:
         requests:
-          memory: 128Mi
-          cpu: 50m
+          memory: 256Mi
+          cpu: 200m
         limits:
-          memory: 200Mi
-          cpu: 100m
+          memory: 512Mi
+          cpu: 300m

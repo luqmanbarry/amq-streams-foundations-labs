@@ -5,36 +5,28 @@ metadata:
 spec:
   kafka:
     # version: 2.7.0
-    replicas: 3
+    replicas: 2
     listeners:
       - name: plain
         port: 9092
         type: internal
         tls: false
-      - name: tls
-        port: 9093
-        type: internal
-        tls: true
     config:
-      offsets.topic.replication.factor: 3
-      transaction.state.log.replication.factor: 3
-      transaction.state.log.min.isr: 2
+      offsets.topic.replication.factor: 2
+      transaction.state.log.replication.factor: 2
+      transaction.state.log.min.isr: 1
     storage:
       type: ephemeral
     resources:
       requests:
         memory: 512Mi
-        cpu: 200m
+        cpu: 300m
       limits:
         memory: 1024Mi
         cpu: 500m
     template:
       pod:
         tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
         - key: ""
           operator: "Exists"
     readinessProbe:
@@ -53,20 +45,23 @@ spec:
     replicas: 3
     storage:
       type: ephemeral
+    logging: 
+      type: inline
+      loggers:
+        zookeeper.root.logger: "INFO"
     resources:
       requests:
-        memory: 512Mi
-        cpu: 200m
+        memory: 4Gi
+        cpu: "1"
       limits:
-        memory: 1024Mi
-        cpu: 500m
+        memory: 4Gi
+        cpu: "1"
+    jvmOptions:
+      "-Xms": 2048m
+      "-Xmx": 2048m
     template:
       pod:
         tolerations:
-        - key: "node-role.kubernetes.io"
-          value: "master"
-          operator: "Equal"
-          effect: "NoSchedule"
         - key: ""
           operator: "Exists"
     readinessProbe:
@@ -84,7 +79,54 @@ spec:
   kafkaExporter:
     groupRegex: ".*"
     topicRegex: ".*" 
+    resources: 
+      requests:
+        cpu: 200m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+    logging: debug 
+    enableSaramaLogging: "true" 
+    readinessProbe: 
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    livenessProbe: 
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    template:
+      pod:
+        tolerations:
+        - key: ""
+          operator: "Exists"
   cruiseControl:
+    brokerCapacity:
+      disk: 100Gi
+      cpuUtilization: 100
+      inboundNetwork: 10000KB/s
+      outboundNetwork: 10000KB/s
+    resources:
+      requests:
+        cpu: 200m
+        memory: 64Mi
+      limits:
+        cpu: 500m
+        memory: 128Mi
+    logging:
+      type: inline
+      loggers:
+        rootLogger.level: "INFO"
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    template:
+      pod:
+        tolerations:
+        - key: ""
+          operator: "Exists"
     metricsConfig:
       type: jmxPrometheusExporter
       valueFrom:
@@ -92,19 +134,29 @@ spec:
           name: cruise-control-metrics
           key: metrics-config.yml
   entityOperator:
-    topicOperator: {}
-      # resources:
-      #   requests:
-      #     memory: 128Mi
-      #     cpu: 50m
-      #   limits:
-      #     memory: 200Mi
-      #     cpu: 100m
-    userOperator: {}
-      # resources:
-      #   requests:
-      #     memory: 128Mi
-      #     cpu: 50m
-      #   limits:
-      #     memory: 200Mi
-      #     cpu: 100m
+    topicOperator:
+      reconciliationIntervalSeconds: 60
+      logging: 
+        type: inline
+        loggers:
+          rootLogger.level: "INFO"
+      resources:
+        requests:
+          memory: 512Mi
+          cpu: "1"
+        limits:
+          memory: 512Mi
+          cpu: "1"
+    userOperator:
+      reconciliationIntervalSeconds: 60
+      logging: 
+        type: inline
+        loggers:
+          rootLogger.level: INFO
+      resources:
+        requests:
+          memory: 512Mi
+          cpu: "1"
+        limits:
+          memory: 512Mi
+          cpu: "1"

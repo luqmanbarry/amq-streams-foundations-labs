@@ -13,16 +13,16 @@ spec:
   - alias: "my-target-cluster"
     bootstrapServers: my-target-cluster-kafka-bootstrap:9092
     config:
-      config.storage.replication.factor: 1
-      offset.storage.replication.factor: 1
-      status.storage.replication.factor: 1
+      config.storage.replication.factor: 3
+      offset.storage.replication.factor: 3
+      status.storage.replication.factor: 3
   mirrors:
   - sourceCluster: "my-source-cluster-1"
     targetCluster: "my-target-cluster"
     sourceConnector:
       config:
-        replication.factor: 1
-        offset-syncs.topic.replication.factor: 1
+        replication.factor: 3
+        offset-syncs.topic.replication.factor: 3
         sync.topic.configs.enabled: "true"
         sync.topic.acls.enabled: "false"
         refresh.topics.interval.seconds: 60
@@ -30,16 +30,16 @@ spec:
         replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
     heartbeatConnector:
       config:
-        heartbeats.topic.replication.factor: 1
+        heartbeats.topic.replication.factor: 3
     checkpointConnector:
       config:
-        checkpoints.topic.replication.factor: 1
+        checkpoints.topic.replication.factor: 3
         refresh.groups.interval.seconds: 60
         replication.policy.separator: ""
         replication.policy.class: "io.strimzi.kafka.connect.mirror.IdentityReplicationPolicy"
         sync.group.offsets.enabled: "true"
-        sync.group.offsets.interval.seconds: 1
-        emit.checkpoints.interval.seconds: 1
+        sync.group.offsets.interval.seconds: 5
+        emit.checkpoints.interval.seconds: 5
     topicsPattern: ".*"
     groupsPattern: ".*"
   # - sourceCluster: "my-source-cluster-2"
@@ -67,40 +67,36 @@ spec:
   #       emit.checkpoints.interval.seconds: 1
   #   topicsPattern: ".*"
   #   groupsPattern: ".*"
-  # resources:
-  #   requests:
-  #     cpu: 1000m
-  #     memory: 2048Mi
-  #   limits:
-  #     cpu: 1000m
-  #     memory: 2048Mi
-  # metricsConfig:
-  #   type: jmxPrometheusExporter
-  #   valueFrom:
-  #     configMapKeyRef:
-  #       name: mirror-maker-2-metrics
-  #       key: metrics-config.yaml
-  # logging:
-  #   type: inline
-  #   loggers:
-  #     connect.root.logger.level: "INFO"
-  #     log4j.logger.io.strimzi.mirrormaker2.agent: TRACE
-  #     mirrormaker2.root.logger: DEBUG
-  # readinessProbe:
-  #   initialDelaySeconds: 15
-  #   timeoutSeconds: 5
-  # livenessProbe:
-  #   initialDelaySeconds: 15
-  #   timeoutSeconds: 5
-  # jvmOptions:
-  #   "-Xmx": "512M"
-  #   "-Xms": "512M"
+  resources:
+    requests:
+      cpu: 500m
+      memory: 756Mi
+    limits:
+      cpu: 500m
+      memory: 756Mi
+  metricsConfig:
+    type: jmxPrometheusExporter
+    valueFrom:
+      configMapKeyRef:
+        name: mirror-maker-2-metrics
+        key: metrics-config.yaml
+  logging:
+    type: inline
+    loggers:
+      connect.root.logger.level: "INFO"
+      log4j.logger.io.strimzi.mirrormaker.agent: ERROR
+      mirrormaker.root.logger: DEBUG
+  readinessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 5
+  livenessProbe:
+    initialDelaySeconds: 15
+    timeoutSeconds: 5
+  jvmOptions:
+    "-Xmx": "300M"
+    "-Xms": "300M"
   template:
     pod:
       tolerations:
-      - key: "node-role.kubernetes.io"
-        value: "master"
-        operator: "Equal"
-        effect: "NoSchedule"
       - key: ""
         operator: "Exists"
