@@ -12,7 +12,17 @@ clusterrole:
       - endpoints
       - pods
 
-customPrometheusRules:
+alertManager:
+  replicas: 1
+  port: 9093
+
+kafkaResourceExpressions:
+  matchExpressions:
+    - key: "strimzi.io/kind"
+      operator: In
+      values: ["Kafka", "KafkaConnect", "KafkaConnectS2I", "KafkaMirrorMaker2", "KafkaExporter", KafkaCruiseControl]
+
+kafkaPrometheusRules:
   groups:
   - name: kafka
     rules:

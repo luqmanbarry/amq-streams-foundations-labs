@@ -1,0 +1,24 @@
+apiVersion: monitoring.coreos.com/v1
+kind: Alertmanager
+metadata:
+  name: alertmanager
+  labels:
+    app: strimzi
+spec:
+  replicas: {{.Values.alertManager.replicas}}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alertmanager
+  labels:
+    app: strimzi
+spec:
+  ports:
+    - name: alertmanager
+      port: {{.Values.alertManager.port}}
+      targetPort: {{.Values.alertManager.port}}
+      protocol: TCP
+  selector:
+    alertmanager: alertmanager
+  type: ClusterIP

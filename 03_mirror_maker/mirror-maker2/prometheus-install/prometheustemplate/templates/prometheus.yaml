@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: {{.Release.Namespace}}-prometheus-server
+  name: {{.Release.Name}}-prometheus-server
   labels:
     app: strimzi
   namespace: {{include "amq-streams.namespace" .}}
@@ -26,7 +26,7 @@ rules:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{.Release.Namespace}}-prometheus-server
+  name: {{.Release.Name}}-prometheus-server
   labels:
     app: strimzi
 
@@ -34,23 +34,23 @@ metadata:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: {{.Release.Namespace}}-prometheus-server
+  name: {{.Release.Name}}-prometheus-server
   labels:
     app: strimzi
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: {{.Release.Namespace}}-prometheus-server
+  name: {{.Release.Name}}-prometheus-server
 subjects:
   - kind: ServiceAccount
-    name: {{.Release.Namespace}}-prometheus-server
+    name: {{.Release.Name}}-prometheus-server
     namespace: {{.Release.Namespace}}
 
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: Prometheus
 metadata:
-  name: {{.Release.Namespace}}-prometheus
+  name: {{.Release.Name}}-prometheus
   labels:
     app: strimzi
 spec:

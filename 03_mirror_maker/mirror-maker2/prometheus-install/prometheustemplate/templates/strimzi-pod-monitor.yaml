@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: cluster-operator-metrics
+  name: {{.Release.Name}}-cluster-operator-metrics
   labels:
     app: strimzi
 spec:
@@ -10,7 +10,7 @@ spec:
       strimzi.io/kind: cluster-operator
   namespaceSelector:
     matchNames:
-      - kafkaproject
+      - {{.Release.Namespace}}
   podMetricsEndpoints:
   - path: /metrics
     port: http
@@ -18,7 +18,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: entity-operator-metrics
+  name: {{.Release.Name}}-entity-operator-metrics
   labels:
     app: strimzi
 spec:
@@ -27,7 +27,7 @@ spec:
       app.kubernetes.io/name: entity-operator
   namespaceSelector:
     matchNames:
-      - kafkaproject
+      - {{.Release.Namespace}}
   podMetricsEndpoints:
   - path: /metrics
     port: healthcheck
@@ -35,7 +35,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: bridge-metrics
+  name: {{.Release.Name}}-bridge-metrics
   labels:
     app: strimzi
 spec:
@@ -44,7 +44,7 @@ spec:
       strimzi.io/kind: KafkaBridge
   namespaceSelector:
     matchNames:
-      - kafkaproject
+      - {{.Release.Namespace}}
   podMetricsEndpoints:
   - path: /metrics
     port: rest-api
@@ -52,18 +52,15 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: kafka-resources-metrics
+  name: {{.Release.Name}}-kafka-resources-metrics
   labels:
     app: strimzi
 spec:
   selector:
-    matchExpressions:
-      - key: "strimzi.io/kind"
-        operator: In
-        values: ["Kafka", "KafkaConnect", "KafkaConnectS2I", "KafkaMirrorMaker2", "KafkaExporter", KafkaCruiseControl]
+    {{- toYaml .Values.kafkaResourceExpressions | nindent 4 }}
   namespaceSelector:
     matchNames:
-      - kafkaproject
+      - {{.Release.Namespace}}
   podMetricsEndpoints:
   - path: /metrics
     port: tcp-prometheus

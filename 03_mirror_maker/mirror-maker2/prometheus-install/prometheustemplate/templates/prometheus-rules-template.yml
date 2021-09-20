@@ -4,7 +4,7 @@ metadata:
   labels:
     role: alert-rules
     app: strimzi
-  name: {{.Release.Namespace}}-prometheus-k8s-rules
+  name: {{.Release.Name}}-prometheus-k8s-rules
   namespace: {{include "amq-streams.namespace" .}}
 spec:
-  {{- toYaml .Values.customPrometheusRules | nindent 2 }}
+  {{- toYaml .Values.kafkaPrometheusRules | nindent 2 }}
